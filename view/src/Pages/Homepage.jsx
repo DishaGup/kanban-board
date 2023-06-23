@@ -102,7 +102,7 @@ const Homepage = () => {
 
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
-    <Grid templateColumns='repeat(3, 1fr)' border='2px solid green' w='98%' m='auto' >
+    <Grid templateColumns='repeat(3, 1fr)' br='#AED581' w='98%' m='auto' mt='50px' >
   <GridItem colSpan={1}>
 
 { TaskData && TaskData.length>0 &&  <BoardSideBar />}

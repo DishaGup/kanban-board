@@ -112,6 +112,22 @@ userDataRouter.delete("/delete/board/:id", async (req, res) => {
   }
 });
 
+
+
+userDataRouter.delete("/delete/task/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await TaskModel.findByIdAndDelete({ _id: id });
+    res.status(201).send({ message: "deleted Successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.messsage });
+  }
+});
+
+
+
+
+
 // userDataRouter.get("/single/:id", async (req, res) => {
 //   const { id } = req.params;
 //   try {

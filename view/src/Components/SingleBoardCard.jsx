@@ -1,12 +1,13 @@
 import { HStack, Box, Text, Button } from "@chakra-ui/react";
 import React,{useState} from "react";
-import { FcList,FcDeleteRow } from "react-icons/fc";
+import { FcList,FcFullTrash } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { delteBoardData } from "../Redux/action";
 const SingleBoardCard = ({ name,_id }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const {boardId}=useParams()
   const { token, TaskData } = useSelector((store) => store.reducer);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -31,8 +32,8 @@ const deleteBoard=(id)=>{
             <Button onMouseEnter={handleHover} onMouseLeave={handleMouseLeave} >
               {" "}
               <FcList />
-              <Text>{name}</Text>{" "}
-              {isHovered ? <FcDeleteRow onClick={()=>deleteBoard(_id)} /> : ""}
+              <Text textTransform={boardId==_id?"uppercase":"none"}  >{name}</Text>{" "}
+              {isHovered ? <FcFullTrash onClick={()=>deleteBoard(_id)} /> : ""}
             </Button>
 
           </Link>

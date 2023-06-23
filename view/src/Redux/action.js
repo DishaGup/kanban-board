@@ -146,3 +146,67 @@ export const delteBoardData = (id, token) => (dispatch) => {
     .then((res) =>fetchAllBoards(token))
     .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
 };
+
+export const deleteTaskFromBoard = (id, token) => (dispatch) => {
+  dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
+
+  // Make a POST request to the add bookmark endpoint
+   axios
+    .delete(`${url}/task/delete/task/${id}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) =>fetchAllBoards(token))
+    .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
+};
+
+
+export const AddSubtaskToTask =(obj)=> (dispatch) => {
+
+  const {token,boardId}=obj
+  dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
+
+  // Make a GET request to the API endpoint
+  // using live server of coingenko to fetch
+  return axios
+    .post(
+      `${url}/task/addsubtask`,obj,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+   
+  dispatch(fetchAllBoards(token))
+    // Return the response data
+    })
+    .catch((err) => {
+     // console.log(err)
+     return err}); // Handle any errors
+};
+
+export const AddtaskToBoard =(obj)=> (dispatch) => {
+ 
+    const {token,boardId}=obj
+    dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
+  
+    // Make a GET request to the API endpoint
+    // using live server of coingenko to fetch
+    return axios
+      .post(
+        `${url}/task/addtask`,obj,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+     
+    dispatch(fetchAllBoards(token))
+      // Return the response data
+      })
+      .catch((err) => {
+         return err}); // Handle any errors
+  };
