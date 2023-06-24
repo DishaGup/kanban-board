@@ -126,14 +126,15 @@ userDataRouter.delete("/delete/task/:id", async (req, res) => {
 
 userDataRouter.get("/search", async (req, res) => {
   const query = req.query.query;
-console.log(query)
+
   try {
     const boards = await BoardModel.find({
       $or: [
         { "tasks.title": { $regex: query, $options: "i" } },
         { "tasks.subtasks.title": { $regex: query, $options: "i" } }
       ]
-    }).populate({
+    })
+    .populate({
       path: "tasks",
       populate: {
         path: "subtasks",
@@ -147,6 +148,39 @@ console.log(query)
   }
 });
 
+
+/***
+ * 
+ 
+frontend logic
+
+userDataRouter.get("/search", async (req, res) => {
+  const query = req.query.query;
+try{
+  const searchResults = boards.filter(board => {
+    const matchingTasks = board.tasks.filter(task => {
+      // Check if the task title matches the query
+      if (task.title.toLowerCase().includes(query.toLowerCase())) {
+        return true;
+      }
+      
+      // Check if any of the subtask titles match the query
+      const matchingSubtasks = task.subtasks.filter(subtask => {
+        return subtask.title.toLowerCase().includes(query.toLowerCase());
+      });
+      
+      // Include the task in the search results if there are matching subtasks
+      return matchingSubtasks.length > 0;
+    });
+    
+    // Include the board in the search results if there are matching tasks
+    return matchingTasks.length > 0;
+  });
+  
+
+  
+  
+  */
 
 userDataRouter.patch("/updatetasktodoing/:id", async (req, res) => {
 const {id}=req.params

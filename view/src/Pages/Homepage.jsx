@@ -41,6 +41,7 @@ import TaskRight from "../Components/TaskRight";
 import MovileDisplayBoards from "../Components/MovileDisplayBoards";
 
 const Homepage = () => {
+  
   const [usersData, setUsersData] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchParams, SetSearchParams] = useSearchParams();
@@ -49,12 +50,19 @@ const Homepage = () => {
   const { token, TaskData } = useSelector((store) => store.reducer);
   const toast = useToast();
 
+
   useEffect(() => {
     dispatch(fetchAllBoards(token));
   }, [TaskData.length]);
 
-  return (
+  if(!token || token === ""){
+    return <> token not found</>
+  }
+ return (
     <React.Suspense fallback={<div>Loading...</div>}>
+      <Box h={{base:'max-content',md:'100vh'}}   style={{
+          backgroundImage: "linear-gradient(to right,#E8F5E9 ,#F1F8E9, white)",
+        }}>   
       <Button
         onClick={onOpen}
         display={{ base: "block", lg: "none" }}
@@ -70,16 +78,16 @@ const Homepage = () => {
       {isOpen && (
         <MovileDisplayBoards isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       )}
+
       <Grid 
-        style={{
-          backgroundImage: "linear-gradient(to right,#E8F5E9 ,#F1F8E9, white)",
-        }}
+      
         templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "240px 1fr 1fr" }}
         gap={4}
         autoRows={'true'}
-        bg="#AED581"
+        
         m="auto"
         w='98%'
+        
       >
         <GridItem
           display={{ base: "none", lg: "block" }}
@@ -95,6 +103,7 @@ const Homepage = () => {
           {TaskData && TaskData.length > 0 && <TaskRight defaults={TaskData[0]._id} />}
         </GridItem>
       </Grid>
+      </Box>
     </React.Suspense>
   );
 };

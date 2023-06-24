@@ -92,25 +92,25 @@ export const Login = () => {
         borderRadius={"5px"}
         boxShadow={"md"}
         padding={"20px"}
-        border={"1px solid #76FF03"}
+        border={"2px solid #76FF03"}
       >
-        <Center>
-          <Text as={"h2"} fontWeight={"500"} fontSize={"1.5rem"}>
-            Login
+        <Center mb='10px'>
+          <Text textDecoration={'underline'} as={"h2"} fontWeight={"500"} fontSize={"1.5rem"}>
+            Login 
           </Text>
         </Center>
 
         <form onSubmit={handleSubmit}>
           <Flex
             flexDirection={"column"}
-            gap={"20px"}
-            padding={{ sm: "50px", md: "50px", lg: "40px" }}
+            gap={{base:'10px',lg:"20px"}}
+            padding={{ sm: "30px", md: "50px", lg: "40px" }}
           >
             <FormControl isRequired>
               <SimpleGrid
                 margin={"auto"}
-                gridTemplateColumns={"repeat(2,1fr)"}
-                alignItems={"center"}
+               gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
+                 alignItems={"center"}
               >
                 <FormLabel>
                   <Text as={"span"}>Email</Text>
@@ -128,7 +128,7 @@ export const Login = () => {
 
             <FormControl isRequired>
               <SimpleGrid
-                gridTemplateColumns={"repeat(2,1fr)"}
+                gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
                 alignItems={"center"}
               >
                 <FormLabel>

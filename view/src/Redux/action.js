@@ -102,38 +102,6 @@ export const addBoardData = (data, token) => (dispatch) => {
     .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
 };
 
-// Fetch bookmarked data for user
-// export const userBookMarkedDataFetch = (token) => (dispatch) => {
-//   dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
-
-//   // Make a GET request to fetch bookmarked data
-//   axios
-//     .get(`${url}/data/user`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     })
-//     .then((res) =>
-//       dispatch({ type: USER_DATA_REQUEST_SUCCESS, payload: res.data })
-//     )
-//     .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
-// };
-
-// Remove bookmark for user
-// export const userRemoveFromBookMark = (id, token) => (dispatch) => {
-//   dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
-
-//   // Make a DELETE request to remove bookmark
-//   axios
-//     .delete(`${url}/data/user/delete/${id}`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     })
-//     .then((res) => dispatch(userBookMarkedDataFetch(token)))
-//     .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
-// };
-
 export const delteBoardData = (id, token) => (dispatch) => {
   dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
 
@@ -236,4 +204,38 @@ export const updateTaskToDoing =(obj)=> (dispatch) => {
     .catch((err) => {
       console.log(err)
        return err}); // Handle any errors
+};
+
+export const searchTaskInfo = (query, boards) => (dispatch) => {
+  const searchResults = boards.reduce((results, board) => {
+    const matchingTasks = board.tasks.filter((task) => {
+      // Check if the task title matches the query
+      if (task.title.toLowerCase().includes(query.toLowerCase())) {
+        return true;
+      }
+
+      // Check if any of the subtask titles match the query
+      const matchingSubtasks = task.subtasks.filter((subtask) => {
+        return subtask.title.toLowerCase().includes(query.toLowerCase());
+      });
+
+      if (matchingSubtasks.length > 0) {
+        return true;
+      }
+
+      return false;
+    });
+
+    if (matchingTasks.length > 0) {
+      results.push({
+        board: board.name,
+        tasks: matchingTasks.map((task) => task.title),
+      });
+    }
+
+    return results;
+  }, []);
+
+ // console.log(searchResults);
+  return searchResults;
 };

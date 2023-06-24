@@ -93,13 +93,15 @@ export const Register = () => {
   return (
     <Box padding={"20px"}>
       <Box
-        border={"1px solid white"}
+  
         margin={"auto"}
         mt={{ sm: "5%", md: "5%", lg: "3%" }}
         width={{ sm: "90vw", md: "80vw", lg: "45vw" }}
         borderRadius={"5px"}
         boxShadow={"md"}
         backgroundColor={"white"}
+        border={"2px solid #76FF03"}
+        p='15px'
       >
         <Center mt={"20px"}>
           <Text as={"h2"} fontWeight={"500"} fontSize={"1.5rem"}>
@@ -110,14 +112,14 @@ export const Register = () => {
         <form onSubmit={handleSubmit}>
           <Flex
             flexDirection={"column"}
-            gap={"20px"}
+            gap={{base:'10px',lg:"20px"}}
             padding={{ sm: "50px", md: "50px", lg: "40px" }}
           >
      
 
             <FormControl isRequired>
               <SimpleGrid
-                gridTemplateColumns={"repeat(2,1fr)"}
+                 gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
                 alignItems={"center"}
               >
                 <FormLabel>
@@ -141,7 +143,7 @@ export const Register = () => {
        
             <FormControl isRequired>
               <SimpleGrid
-                gridTemplateColumns={"repeat(2,1fr)"}
+               gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
                 alignItems={"center"}
               >
                 <FormLabel>
@@ -150,7 +152,7 @@ export const Register = () => {
                 <HStack>
                   <Input
                     border={"1px dotted #8BC34A"}
-                    placeholder="Type Strong Password"
+                    placeholder="Password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
@@ -165,7 +167,7 @@ export const Register = () => {
 
             <FormControl isRequired>
               <SimpleGrid
-                gridTemplateColumns={"repeat(2,1fr)"}
+                  gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
                 alignItems={"center"}
               >
                 <FormLabel>
