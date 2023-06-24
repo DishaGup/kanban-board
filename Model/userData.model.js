@@ -1,15 +1,15 @@
 const { Schema, model, ObjectId } = require("mongoose");
-
 const subtaskSchema = Schema(
   {
     _id: ObjectId,
     title: String,
-    isCompleted: Boolean,
+    isCompleted: { type: Boolean, default: false },
   },
   {
     versionKey: false,
   }
 );
+
 
 const SubTaskModel = model("SubTaskModel", subtaskSchema);
 const taskSchema = Schema(

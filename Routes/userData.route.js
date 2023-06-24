@@ -124,31 +124,63 @@ userDataRouter.delete("/delete/task/:id", async (req, res) => {
   }
 });
 
+userDataRouter.get("/search", async (req, res) => {
+  const query = req.query.query;
+console.log(query)
+  try {
+    const boards = await BoardModel.find({
+      $or: [
+        { "tasks.title": { $regex: query, $options: "i" } },
+        { "tasks.subtasks.title": { $regex: query, $options: "i" } }
+      ]
+    }).populate({
+      path: "tasks",
+      populate: {
+        path: "subtasks",
+        model: "SubTaskModel"
+      }
+    });
+
+    res.status(200).json({ boards });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 
+userDataRouter.patch("/updatetasktodoing/:id", async (req, res) => {
+const {id}=req.params
+  try {
+    const boardId = req.body.boardId; // Retrieve boardId from the request or any other source
+    const board = await BoardModel.findById({_id:boardId});
 
+    if (!board) {
+      throw new Error("Board not found");
+    }
 
-// userDataRouter.get("/single/:id", async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const searchList = UserDataModel.findById({ _id: id });
-//     res.status(201).send({ searchList });
-//   } catch (error) {
-//     res.status(400).json({ error: error.messsage });
-//   }
-// });
+    const task = await TaskModel.findById({_id:id});
 
-// userDataRouter.get("/search", async (req, res) => {
-//   let filters = {};
-//   if (req.query.name) {
-//     filters.name = { $regex: req.query.name, $options: "i" };
-//   }
-//   try {
-//     const searchList = await UserDataModel.find(filters).skip(0);
-//     res.status(200).send({ searchList });
-//   } catch (error) {
-//     res.status(400).send({ error });
-//   }
-// });
+    if (!task) {
+      throw new Error("Task not found");
+    }
+
+    if (task.status === "Todo") {
+      task.status = "Doing";
+    } else if (task.status === "Doing") {
+      task.status = "Done";
+    } else {
+      // Handle any other status transition if needed
+      throw new Error("Invalid status transition");
+    }
+
+    await task.save();
+
+    res.status(200).json({ msg: "Task status updated successfully" });
+   
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 
 module.exports = { userDataRouter };

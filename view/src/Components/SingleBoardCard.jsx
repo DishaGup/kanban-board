@@ -26,18 +26,20 @@ const deleteBoard=(id)=>{
 
   return (
     <div>
-      <Box p={2}>
-        <HStack>
-          <Link to={`/board/${_id}`} >
-            <Button onMouseEnter={handleHover} onMouseLeave={handleMouseLeave} >
+      <Box p={2} w='130px'  >
+      <Link to={`/board/${_id}`}  >
+        <HStack w='150px' border='1px solid black'  borderRadius={'10px'}  >
+
+            <Button _hover={{color:'none',bg:'none'}} onMouseEnter={handleHover} bg={boardId==_id?"#AED581":""} w='100%'  onMouseLeave={handleMouseLeave} >
               {" "}
               <FcList />
-              <Text textTransform={boardId==_id?"uppercase":"none"}  >{name}</Text>{" "}
-              {isHovered ? <FcFullTrash onClick={()=>deleteBoard(_id)} /> : ""}
+              <Text mx='9px' textTransform={boardId==_id?"uppercase":"none"}  >{name}</Text>{" "}
+              {isHovered ? <FcFullTrash fontSize={'22px'} onClick={()=>deleteBoard(_id)} /> : ""}
             </Button>
 
-          </Link>
+       
         </HStack>
+        </Link>
       </Box>
     </div>
   );

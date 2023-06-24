@@ -41,6 +41,7 @@ export const Navbar = () => {
       bg={"#B2FF59"}
       padding={"10px"}
       borderBottom={'2px solid #388E3C'}
+    
     >
 <Menu display={{base:'block',lg:'none'}} color='black' > 
   <MenuButton

@@ -15,3 +15,5 @@ export const USER_LOGOUT_SUCCESS = "USER_LOGOUT_SUCCESS";
 
 export const SEARCH_SINGLE_STOCKS = "SEARCH_SINGLE_STOCKS";
 // This constant represents the action type for searching a single stock data.
+
+export const USER_SINGLE_TASK_DATA="USER_SINGLE_TASK_DATA"

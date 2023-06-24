@@ -22,7 +22,7 @@ const addBoard=()=>{
   return (
     <>
       <Box>
-        <Text my="10px">All Boards {TaskData.length}</Text>
+        <Text fontWeight='600' fontSize='20px' my="10px">Total Boards {TaskData.length}</Text>
 
         <Box>
           <VStack>
@@ -32,9 +32,9 @@ const addBoard=()=>{
                 <SingleBoardCard key={index} {...el} />
               ))}
 
-            <Box p={2}>
-              <HStack>
-                <Button onClick={addBoard}>
+            <Box mt='30px'p={1}  border='1px solid #66BB6A'  align='center'>
+              <HStack  align='center' > 
+                <Button _hover={{color:'none',bg:'#2E7D32'}} onClick={addBoard} bg='#66BB6A' w='180px' align='center' color='white'  >
                   {" "}
                   <FcAddDatabase />
                   <Text>Add Board</Text>{" "}

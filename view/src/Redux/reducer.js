@@ -6,6 +6,7 @@ import {
   USER_REQUEST_FAILURE,
   USER_REQUEST_PENDING,
   USER_REQUEST_SUCCESS,
+  USER_SINGLE_TASK_DATA,
 } from "./actionTypes";
 
 const initial = {
@@ -14,8 +15,8 @@ const initial = {
   TaskData: [],
   userDetails: [],
   token: "",
-  subTaskData:[]
- 
+  subTaskData:[],
+  SingleTaskData:[]
 };
 
 export const reducer = (state = initial, { type, payload }) => {
@@ -43,7 +44,13 @@ export const reducer = (state = initial, { type, payload }) => {
         loading: false,
         TaskData: payload.boards,
       };
-
+      case USER_SINGLE_TASK_DATA:
+             
+        return {
+          ...state,
+          loading: false,
+          SingleTaskData: payload.board.tasks
+        };
     case USER_LOGOUT_SUCCESS:
       // Reset user details and token on successful user logout
       return {

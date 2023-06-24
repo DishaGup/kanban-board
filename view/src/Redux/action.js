@@ -5,6 +5,7 @@ import {
   USER_LOGIN_REQUEST_SUCCESS,
   USER_REQUEST_FAILURE,
   USER_REQUEST_PENDING,
+  USER_SINGLE_TASK_DATA,
 } from "./actionTypes";
 import { BiZoomIn } from "react-icons/bi";
 
@@ -46,8 +47,8 @@ export const fetchAllBoards =(token)=> (dispatch) => {
         }
       )
       .then((res) => {
-        dispatch({type:"LOADING_FALSE"}) 
-       return res.data.board
+        dispatch({type:USER_SINGLE_TASK_DATA,payload:res.data}) 
+     //  return res.data.board
       // Return the response data
       })
       .catch((err) => err); // Handle any errors
@@ -147,7 +148,7 @@ export const delteBoardData = (id, token) => (dispatch) => {
     .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
 };
 
-export const deleteTaskFromBoard = (id, token) => (dispatch) => {
+export const deleteTaskFromBoard = (id, token,boardId) => (dispatch) => {
   dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
 
   // Make a POST request to the add bookmark endpoint
@@ -157,8 +158,8 @@ export const deleteTaskFromBoard = (id, token) => (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     })
-    .then((res) =>fetchAllBoards(token))
-    .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
+    .then((res) =>   dispatch(fetchSingleBoardsData(token,boardId)))
+    .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }))
 };
 
 
@@ -179,7 +180,7 @@ export const AddSubtaskToTask =(obj)=> (dispatch) => {
     )
     .then((res) => {
    
-  dispatch(fetchAllBoards(token))
+      dispatch(fetchSingleBoardsData(token,boardId))
     // Return the response data
     })
     .catch((err) => {
@@ -204,9 +205,35 @@ export const AddtaskToBoard =(obj)=> (dispatch) => {
       )
       .then((res) => {
      
-    dispatch(fetchAllBoards(token))
+    dispatch(fetchSingleBoardsData(token,boardId))
       // Return the response data
       })
       .catch((err) => {
          return err}); // Handle any errors
   };
+
+  
+export const updateTaskToDoing =(obj)=> (dispatch) => {
+ 
+  const {token,boardId,taskId}=obj
+  dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
+
+  // Make a GET request to the API endpoint
+  // using live server of coingenko to fetch
+  return axios
+    .patch(
+      `${url}/task/updatetasktodoing/${taskId}`,obj,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+   
+  dispatch(fetchSingleBoardsData(token,boardId))
+    // Return the response data
+    })
+    .catch((err) => {
+      console.log(err)
+       return err}); // Handle any errors
+};

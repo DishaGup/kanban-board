@@ -38,90 +38,64 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllBoards } from "../Redux/action";
 import BoardSideBar from "../Components/BoardSideBar";
 import TaskRight from "../Components/TaskRight";
-
+import MovileDisplayBoards from "../Components/MovileDisplayBoards";
 
 const Homepage = () => {
   const [usersData, setUsersData] = useState([]);
-  const [searchParams,SetSearchParams] =useSearchParams()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [searchParams, SetSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token, TaskData } = useSelector((store) => store.reducer);
-  // const [visibleRows, setVisibleRows] = useState([1, 5]);
   const toast = useToast();
 
   useEffect(() => {
-    dispatch(fetchAllBoards(token))
-   // SetSearchParams({boardId:TaskData[0]._id})
+    dispatch(fetchAllBoards(token));
   }, [TaskData.length]);
-//console.log(TaskData)
-  // const handleAddToBookMark = (data) => {
-  //   if (!token) {
-  //     toast({
-  //       title: "Login to Your Account",
-  //       position: "top",
-  //       status: "info",
-  //       variant: "top-accent",
-  //       duration: 3000,
-  //       isClosable: true,
-  //     });
-
-  //     setTimeout(() => {
-  //       navigate("/login");
-  //     }, 2000);
-  //     return;
-  //   }
-
-  //   const isAlreadyBookmarked = bookmarkedData.some(
-  //     (item) => item.id === data.id
-  //   );
-
-  //   if (!isAlreadyBookmarked) {
-  //     dispatch(userAddToBookmarked(data, token));
-  //   } else {
-  //     toast({
-  //       title: "Already in WatchList",
-  //       position: "top",
-  //       status: "info",
-  //       variant: "top-accent",
-  //       duration: 2000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // };
-
-  // const handleToggleRow = (rowIndex) => {
-  //   if (visibleRows.includes(rowIndex)) {
-  //     setVisibleRows(visibleRows.filter((row) => row !== rowIndex));
-  //   } else {
-  //     setVisibleRows([...visibleRows, rowIndex]);
-  //   }
-  // };
-
-
-
 
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
-    <Grid templateColumns='repeat(3, 1fr)' br='#AED581' w='98%' m='auto' mt='50px' >
-  <GridItem colSpan={1}>
-
-{ TaskData && TaskData.length>0 &&  <BoardSideBar />}
-
-  </GridItem>
-<GridItem colSpan={2}>
-
- {  TaskData && TaskData.length>0 &&  <TaskRight defaults={TaskData[0]._id}  />}
-
-</GridItem>
-
-
-    </Grid>
-    
-    
-    
+      <Button
+        onClick={onOpen}
+        display={{ base: "block", lg: "none" }}
+        position={"absolute"}
+        left={4}
+        top={{base:'100px',sm:"80px"}}
+        color="white"
+        _hover={{ bg: "#689F38" }}
+        bg="#8BC34A"
+      >
+        Boards
+      </Button>
+      {isOpen && (
+        <MovileDisplayBoards isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      )}
+      <Grid 
+        style={{
+          backgroundImage: "linear-gradient(to right,#E8F5E9 ,#F1F8E9, white)",
+        }}
+        templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "240px 1fr 1fr" }}
+        gap={4}
+        autoRows={'true'}
+        bg="#AED581"
+        m="auto"
+        w='98%'
+      >
+        <GridItem
+          display={{ base: "none", lg: "block" }}
+          colSpan={1}
+          scrollBehavior="smooth"
+          overflowY="scroll"
+          mt="50px"
+          maxHeight="700px"
+        >
+          {TaskData && TaskData.length > 0 && <BoardSideBar />}
+        </GridItem>
+        <GridItem colSpan={2} mt={{ base: "100px", md: "110px",xl:'90px' }}>
+          {TaskData && TaskData.length > 0 && <TaskRight defaults={TaskData[0]._id} />}
+        </GridItem>
+      </Grid>
     </React.Suspense>
-   
-
   );
 };
 
