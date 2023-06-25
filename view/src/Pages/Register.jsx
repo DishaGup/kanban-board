@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUserRequest } from "../Redux/action";
 const initialState = {
   password: "",
@@ -33,6 +33,9 @@ export const Register = () => {
   const toast = useToast();
   const dispatch = useDispatch();
 
+ const { token, TaskData, loading, error, SingleTaskData } = useSelector(
+    (store) => store.reducer
+  );
   //making an object from input values
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -63,7 +66,7 @@ export const Register = () => {
 
     dispatch(registerUserRequest(formData))
       .then((res) => {
-        console.log(res)
+       
         toast({
           title: `${res.data.message}`,
           position: "top",
@@ -75,7 +78,8 @@ export const Register = () => {
         });
         navigate("/login");
       })
-      .catch((err) =>
+      .catch((err) =>{
+    
         toast({
           title: "Error in Creating Your Account",
           position: "top",
@@ -83,7 +87,7 @@ export const Register = () => {
           variant: "top-accent",
           duration: 3000,
           isClosable: true,
-        })
+        })}
       );
    
 

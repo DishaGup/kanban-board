@@ -26,14 +26,15 @@ const TaskRight = ({ defaults }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token, TaskData, loading, error, SingleTaskData } = useSelector(
+  const { token, TaskData, loading, error, SingleTaskData,userDetails } = useSelector(
     (store) => store.reducer
   );
   const defaultBoardId = TaskData[0]?._id;
   useEffect(() => {
     const passId = boardId || defaultBoardId;
-    dispatch(fetchSingleBoardsData(token, passId));
-  }, [boardId, defaultBoardId, token]);
+    
+    dispatch(fetchSingleBoardsData(token, passId,userDetails[0].email));
+  }, [boardId, defaultBoardId, token,TaskData,loading]);
 
   useEffect(() => {
     setTask(SingleTaskData);

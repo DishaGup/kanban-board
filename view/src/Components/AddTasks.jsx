@@ -32,7 +32,7 @@ const AddTasks = ({ isOpen, onOpen, onClose }) => {
   const [formData, setFormData] = useState(initial);
   const [formError, setFormError] = useState(false);
   const toast = useToast();
-  const { error, token, TaskData } = useSelector((store) => store.reducer);
+  const { error, token, TaskData ,userDetails} = useSelector((store) => store.reducer);
 
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -53,7 +53,7 @@ const AddTasks = ({ isOpen, onOpen, onClose }) => {
     }
 
     let passId = boardId || TaskData[0]?._id;
-    let obj = { ...formData, boardId: passId, token };
+    let obj = { ...formData, boardId: passId, token,email:userDetails[0].email };
     dispatch(AddtaskToBoard(obj));
     setFormData(initial);
     setFormError(false);

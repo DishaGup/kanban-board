@@ -8,7 +8,7 @@ const SingleBoardCard = ({ name,_id }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const {boardId}=useParams()
-  const { token, TaskData } = useSelector((store) => store.reducer);
+  const { token, TaskData ,userDetails} = useSelector((store) => store.reducer);
   const [isHovered, setIsHovered] = useState(false);
 
   const handleHover = () => {
@@ -20,8 +20,8 @@ const SingleBoardCard = ({ name,_id }) => {
   };
 
 const deleteBoard=(id)=>{
- 
-  dispatch(delteBoardData(id,token))
+  let email=userDetails[0].email
+  dispatch(delteBoardData(id,token,email))
 }
 
   return (

@@ -21,8 +21,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUserRequest } from "../Redux/action";
 
 const initial = {
-  email: "disha@gmail.com",
-  password: "disha",
+  email: "",
+  password: "",
 };
 
 export const Login = () => {
@@ -33,7 +33,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { error,token } = useSelector((store) => store.reducer);
-
+console.log(error)
   const dispatch = useDispatch();
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -58,7 +58,10 @@ export const Login = () => {
             duration: 2000,
             isClosable: true,
           });
-          navigate("/");
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+         
         } else {
           toast({
             title: "Wrong Credentials",

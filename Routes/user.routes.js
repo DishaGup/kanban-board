@@ -2,14 +2,13 @@ const express = require("express");
 const userRouter = express.Router();
 const bcrypt = require("bcrypt"); //for hashing of password
 const jwt = require("jsonwebtoken"); //for authorization the realtime user
-const { UserModel } = require("../Model/user.model"); 
-
+const { UserModel } = require("../Model/user.model");
 
 userRouter.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-      const existingUser = await UserModel.findOne({ email });
+    const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       return res
         .status(200)
@@ -17,11 +16,11 @@ userRouter.post("/signup", async (req, res) => {
     }
 
     bcrypt.hash(password, 2, async (err, hash) => {
-    if(err) return new Error("server error")
-     const user = new UserModel({
+      if (err) return new Error("server error");
+      const user = new UserModel({
         email,
-        password: hash, 
-        });
+        password: hash,
+      });
       await user.save();
       res.status(201).json({ message: "Account created successfully" });
     });
@@ -30,20 +29,15 @@ userRouter.post("/signup", async (req, res) => {
   }
 });
 
-
-
 userRouter.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
     if (user) {
       bcrypt.compare(password, user.password, (err, result) => {
-        if(err) throw new Error("server error")
+        if (err) throw new Error("server error");
         if (result) {
-          const token = jwt.sign(
-            { email_task : user.email }, 
-            "kanban"
-          );
+          const token = jwt.sign({ email_task: user.email }, "kanban");
 
           res.status(200).json({
             message: "Login Successful",
@@ -61,8 +55,6 @@ userRouter.post("/signin", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 
 userRouter.get("/", async (req, res) => {
   try {

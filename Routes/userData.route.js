@@ -1,37 +1,39 @@
+//userData.route.js
+
 const express = require("express");
 const userDataRouter = express.Router();
-const { BoardModel, TaskModel, SubTaskModel } = require("../Model/userData.model");
+const {
+  BoardModel,
+  TaskModel,
+  SubTaskModel,
+} = require("../Model/userData.model");
 const { default: mongoose } = require("mongoose");
+const {
+  filterBoardsByEmail,
+} = require("../Controllers/filterBoardByEmail.middleware");
 
-userDataRouter.get("/", async (req, res) => {
-  try {
-    const boards = await BoardModel.find().populate({
-      path: "tasks",
-      populate: {
-        path: "subtasks",
-        model: "SubTaskModel"
-      }
-    });
 
-    res.status(200).json({ boards });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+
+
+userDataRouter.get("/", filterBoardsByEmail,(req, res) => {
+  const boards = req.filteredBoards;
+  res.status(200).json({ boards });
 });
 
 userDataRouter.get("/board/:id", async (req, res) => {
   try {
     const boardId = req.params.id;
+    //console.log(boardId);
     const board = await BoardModel.findById(boardId).populate({
       path: "tasks",
       populate: {
         path: "subtasks",
-        model: "SubTaskModel"
-      }
+        model: "SubTaskModel",
+      },
     });
-
+   // console.log(board);
     if (!board) {
-      throw new Error("Board not found");
+      return res.status(404).json({ error: "Board not found" });
     }
 
     res.status(200).json({ board });
@@ -40,12 +42,13 @@ userDataRouter.get("/board/:id", async (req, res) => {
   }
 });
 
-
-
-
-userDataRouter.post("/addboard", async (req, res) => {
+userDataRouter.post("/addboard", filterBoardsByEmail,async (req, res) => {
+  //console.log(req.body,'..req.body')
   try {
-    const board = new BoardModel({ ...req.body, _id: new mongoose.Types.ObjectId() });
+    const board = new BoardModel({
+      ...req.body,
+      _id: new mongoose.Types.ObjectId(),
+    });
     await board.save();
     res.status(200).json({ board });
   } catch (error) {
@@ -62,7 +65,10 @@ userDataRouter.post("/addtask", async (req, res) => {
       throw new Error("Board not found");
     }
 
-    const task = new TaskModel({ ...req.body, _id: new mongoose.Types.ObjectId() });
+    const task = new TaskModel({
+      ...req.body,
+      _id: new mongoose.Types.ObjectId(),
+    });
     await task.save();
 
     board.tasks.push(task._id);
@@ -78,18 +84,21 @@ userDataRouter.post("/addsubtask", async (req, res) => {
   try {
     const boardId = req.body.boardId;
     const taskId = req.body.taskId;
-    
+
     const board = await BoardModel.findById(boardId);
     if (!board) {
       throw new Error("Board not found");
     }
-    
+
     const task = await TaskModel.findById(taskId);
     if (!task) {
       throw new Error("Task not found");
     }
 
-    const subtask = new SubTaskModel({ ...req.body, _id: new mongoose.Types.ObjectId() });
+    const subtask = new SubTaskModel({
+      ...req.body,
+      _id: new mongoose.Types.ObjectId(),
+    });
     await subtask.save();
 
     task.subtasks.push(subtask._id);
@@ -101,7 +110,6 @@ userDataRouter.post("/addsubtask", async (req, res) => {
   }
 });
 
-
 userDataRouter.delete("/delete/board/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -111,8 +119,6 @@ userDataRouter.delete("/delete/board/:id", async (req, res) => {
     res.status(400).json({ error: error.messsage });
   }
 });
-
-
 
 userDataRouter.delete("/delete/task/:id", async (req, res) => {
   const { id } = req.params;
@@ -124,75 +130,17 @@ userDataRouter.delete("/delete/task/:id", async (req, res) => {
   }
 });
 
-userDataRouter.get("/search", async (req, res) => {
-  const query = req.query.query;
-
-  try {
-    const boards = await BoardModel.find({
-      $or: [
-        { "tasks.title": { $regex: query, $options: "i" } },
-        { "tasks.subtasks.title": { $regex: query, $options: "i" } }
-      ]
-    })
-    .populate({
-      path: "tasks",
-      populate: {
-        path: "subtasks",
-        model: "SubTaskModel"
-      }
-    });
-
-    res.status(200).json({ boards });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-
-/***
- * 
- 
-frontend logic
-
-userDataRouter.get("/search", async (req, res) => {
-  const query = req.query.query;
-try{
-  const searchResults = boards.filter(board => {
-    const matchingTasks = board.tasks.filter(task => {
-      // Check if the task title matches the query
-      if (task.title.toLowerCase().includes(query.toLowerCase())) {
-        return true;
-      }
-      
-      // Check if any of the subtask titles match the query
-      const matchingSubtasks = task.subtasks.filter(subtask => {
-        return subtask.title.toLowerCase().includes(query.toLowerCase());
-      });
-      
-      // Include the task in the search results if there are matching subtasks
-      return matchingSubtasks.length > 0;
-    });
-    
-    // Include the board in the search results if there are matching tasks
-    return matchingTasks.length > 0;
-  });
-  
-
-  
-  
-  */
-
 userDataRouter.patch("/updatetasktodoing/:id", async (req, res) => {
-const {id}=req.params
+  const { id } = req.params;
   try {
     const boardId = req.body.boardId; // Retrieve boardId from the request or any other source
-    const board = await BoardModel.findById({_id:boardId});
+    const board = await BoardModel.findById({ _id: boardId });
 
     if (!board) {
       throw new Error("Board not found");
     }
 
-    const task = await TaskModel.findById({_id:id});
+    const task = await TaskModel.findById({ _id: id });
 
     if (!task) {
       throw new Error("Task not found");
@@ -210,11 +158,50 @@ const {id}=req.params
     await task.save();
 
     res.status(200).json({ msg: "Task status updated successfully" });
-   
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
+
+userDataRouter.patch("/update_subtask_completed/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { boardId, taskId } = req.body; // Retrieve boardId and taskId from the request body
+    const board = await BoardModel.findById(boardId);
+
+    if (!board) {
+      throw new Error("Board not found");
+    }
+
+    const task = await TaskModel.findById(taskId);
+    if (!task) {
+      throw new Error("Task not found");
+    }
+    const subtask = await SubTaskModel.findById(id);
+
+    if (!subtask) {
+      throw new Error("Subtask not found");
+    }
+
+    if (subtask.isCompleted === true) {
+      subtask.isCompleted = false;
+    } else if (subtask.isCompleted === false) {
+      subtask.isCompleted = true;
+    } else {
+      throw new Error("Invalid status transition");
+    }
+
+    await subtask.save();
+    await task.save();
+
+    res.status(200).json({ msg: "Subtask status updated successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+
+
 
 
 module.exports = { userDataRouter };

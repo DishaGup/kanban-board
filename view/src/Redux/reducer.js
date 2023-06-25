@@ -15,8 +15,8 @@ const initial = {
   TaskData: [],
   userDetails: [],
   token: "",
-  subTaskData:[],
-  SingleTaskData:[]
+  subTaskData: [],
+  SingleTaskData: [],
 };
 
 export const reducer = (state = initial, { type, payload }) => {
@@ -44,13 +44,12 @@ export const reducer = (state = initial, { type, payload }) => {
         loading: false,
         TaskData: payload.boards,
       };
-      case USER_SINGLE_TASK_DATA:
-             
-        return {
-          ...state,
-          loading: false,
-          SingleTaskData: payload.board.tasks
-        };
+    case USER_SINGLE_TASK_DATA:
+      return {
+        ...state,
+        loading: false,
+        SingleTaskData: payload.board.tasks,
+      };
     case USER_LOGOUT_SUCCESS:
       // Reset user details and token on successful user logout
       return {
@@ -65,15 +64,16 @@ export const reducer = (state = initial, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        error: payload?.response?.data?.error,
+        error: payload,
+        // error: payload?.response?.data?.error
       };
-      case "LOADING_FALSE":
-        // Update error message on user request failure
-        return {
-          ...state,
-          loading: false,
-       
-        };
+
+    case "LOADING_FALSE":
+      // Update error message on user request failure
+      return {
+        ...state,
+        loading: false,
+      };
 
     default:
       return state;

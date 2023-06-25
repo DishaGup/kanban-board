@@ -23,7 +23,7 @@ const AddSubtask = ({ isOpen, onOpen, onClose, taskId, boardId }) => {
   const [title, setTitle] = useState("");
 
   const toast = useToast();
-  const { error, token, TaskData } = useSelector((store) => store.reducer);
+  const { error, token, TaskData,userDetails } = useSelector((store) => store.reducer);
 
   const dispatch = useDispatch();
 
@@ -37,7 +37,7 @@ const AddSubtask = ({ isOpen, onOpen, onClose, taskId, boardId }) => {
 
     let passId = boardId || TaskData[0]?._id;
 
-    let data = { boardId: passId, taskId, title, token, isCompleted: false };
+    let data = { boardId: passId, taskId, title, token, isCompleted: false,email:userDetails[0].email };
 
     dispatch(AddSubtaskToTask(data));
     setTitle("");

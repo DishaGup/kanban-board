@@ -47,13 +47,15 @@ const Homepage = () => {
   const [searchParams, SetSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token, TaskData } = useSelector((store) => store.reducer);
+  const { token, TaskData,error,userDetails,loading } = useSelector((store) => store.reducer);
   const toast = useToast();
-
-
+  
+//console.log(userDetails)
+//console.log(error)
   useEffect(() => {
-    dispatch(fetchAllBoards(token));
-  }, [TaskData.length]);
+   if(token!="") {
+ dispatch(fetchAllBoards(token,userDetails[0].email))}
+  }, [TaskData,loading]);
 
   if(!token || token === ""){
     return <> token not found</>

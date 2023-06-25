@@ -10,9 +10,10 @@ import {
   useToast,
   Stack,
   HStack,
-  IconButton,Button
+  IconButton,
+  Button,
 } from "@chakra-ui/react";
-
+import debounce from "lodash/debounce";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { USER_LOGOUT_SUCCESS } from "../Redux/actionTypes";
@@ -40,39 +41,47 @@ export const Navbar = () => {
     fontWeight: "500",
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     setSearchTask(e.target.value);
+  };
 
-    if (searchTask === "" || searchTask.length < 2) {
+  const debouncedSearch = debounce((query) => {
+
+if(!token || token =="") {
+return   setTimeout(() => {
+  toast({
+    title: "Please Login",
+    description:"token not found",
+    status: "info",
+    duration: 3000,
+    isClosable: true,
+  });
+}, 2000);
+}
+
+
+    if (query === "" || query.length < 2) {
       setTimeout(() => {
         toast({
-          title: "Enter Minimum 3 characters",
-          position: "top",
+          title: "Minimum 3 characters required",
           status: "info",
           duration: 3000,
           isClosable: true,
         });
       }, 2000);
-
-      return;
+      setSearchResults([]);
+    } else {
+      let res = dispatch(searchTaskInfo(query, TaskData));
+      setSearchResults(res);
     }
-    let res = await dispatch(searchTaskInfo(searchTask, TaskData));
-
-    setSearchResults(res);
-  };
+  }, 500);
 
   useEffect(() => {
-    if (searchTask === "" || searchTask.length < 2) {
-      setSearchResults([]);
-      return;
-    }
-    let timeIntervalId;
-    timeIntervalId = setInterval(() => {
-      let res = dispatch(searchTaskInfo(searchTask, TaskData));
+    debouncedSearch(searchTask);
 
-      setSearchResults(res);
-    }, 2000);
-    return () => clearInterval(timeIntervalId);
+    return () => {
+      debouncedSearch.cancel();
+    };
   }, [searchTask]);
 
   //console.log(searchResults)
@@ -135,17 +144,18 @@ export const Navbar = () => {
               </NavLink>
             )}
 
-            <MenuItem icon={<FcLock />}>
-              <NavLink
-                to={"/register"}
-                style={({ isActive }) => {
-                  return isActive ? activeLinkStyle : defaultLinkStyle;
-                }}
-                end
-              >
-                <Text>Sign Up</Text>
-              </NavLink>
-            </MenuItem>
+            <NavLink
+              to={"/register"}
+              style={({ isActive }) => {
+                return isActive ? activeLinkStyle : defaultLinkStyle;
+              }}
+              end
+            >
+              {" "}
+              <MenuItem icon={<FcLock />}>
+                <Text>Sign Up</Text>{" "}
+              </MenuItem>
+            </NavLink>
           </MenuList>
         </Menu>
 
@@ -186,7 +196,7 @@ export const Navbar = () => {
               dispatch({ type: USER_LOGOUT_SUCCESS });
               navigate("/login");
             }}
-          //  icon={<FcUnlock />}
+            //  icon={<FcUnlock />}
           >
             <Text>Log Out</Text>
           </Button>
@@ -214,11 +224,9 @@ export const Navbar = () => {
           />
         </HStack>
       </Flex>
+
       {searchResults && searchResults.length >= 1 && (
-        <SearchBarResults
-          board={searchResults[0]?.board}
-          task={searchResults[0]?.tasks}
-        />
+        <SearchBarResults data={searchResults} />
       )}
     </>
   );

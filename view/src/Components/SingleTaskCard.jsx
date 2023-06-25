@@ -26,9 +26,9 @@ import {
   FcPositiveDynamic,
 } from "react-icons/fc";
 import AddSubtask from "./AddSubtask";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTaskFromBoard, updateTaskToDoing } from "../Redux/action";
+import { deleteTaskFromBoard, updateSubTaskStatus, updateTaskToDoing } from "../Redux/action";
 import { Droppable } from "react-beautiful-dnd";
 const SingleTaskCard = ({
   title,
@@ -42,14 +42,24 @@ const SingleTaskCard = ({
 
   const [donetasklength, setdoneTasklength] = useState(0);
   const dispatch = useDispatch();
-  const { token,TaskData } = useSelector((store) => store.reducer);
+  const location=useLocation()
+  const { token,TaskData,userDetails,SingleTaskData,loading } = useSelector((store) => store.reducer);
   const { onOpen, isOpen, onClose } = useDisclosure();
-  const handleUpdateStatusOfSubtask = () => {};
+  const handleUpdateStatusOfSubtask = (subtaskId) => {
+
+    const defaultBoardId = TaskData[0]?._id;
+    const passId = boardId || defaultBoardId;
+    let obj = { token, boardId:passId, taskId: _id,email:userDetails[0].email,subtaskId };
+dispatch(updateSubTaskStatus(obj))
+
+
+  };
 
   const handleTaskDelete = () => {
     const defaultBoardId = TaskData[0]?._id;
     const passId = boardId || defaultBoardId;
-    dispatch(deleteTaskFromBoard(_id, token,passId));
+    let email=userDetails[0].email
+    dispatch(deleteTaskFromBoard(_id, token,passId,email));
   };
 
   const findDonesubtask = () => {
@@ -61,12 +71,12 @@ const SingleTaskCard = ({
 
   useEffect(() => {
     findDonesubtask();
-  }, []);
+  }, [loading]);
 
   const handleAddtoDoing = () => {
     const defaultBoardId = TaskData[0]?._id;
     const passId = boardId || defaultBoardId;
-    let obj = { token, boardId:passId, taskId: _id };
+    let obj = { token, boardId:passId, taskId: _id,email:userDetails[0].email };
     dispatch(updateTaskToDoing(obj));
   };
 
@@ -144,7 +154,7 @@ const SingleTaskCard = ({
                     <HStack align="center">
                       {" "}
                       <Text >{subtask.title}</Text>
-                      <Button bg='0 0' _hover={{bg:'0 0'}} ouline='0 0' onClick={handleUpdateStatusOfSubtask}>
+                      <Button bg='0 0' _hover={{bg:'0 0'}} ouline='0 0' onClick={()=>handleUpdateStatusOfSubtask(subtask._id)}>
                         {subtask.isCompleted ? (
                           <FcCheckmark boxsize={7} />
                         ) : (
