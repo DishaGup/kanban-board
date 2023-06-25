@@ -34,7 +34,7 @@ const TaskRight = ({ defaults }) => {
     const passId = boardId || defaultBoardId;
     
     dispatch(fetchSingleBoardsData(token, passId,userDetails[0].email));
-  }, [boardId, defaultBoardId, token,TaskData,loading]);
+  }, [boardId, defaultBoardId, token,TaskData.length]);
 
   useEffect(() => {
     setTask(SingleTaskData);

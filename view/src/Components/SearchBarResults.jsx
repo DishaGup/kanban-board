@@ -12,7 +12,7 @@ const SearchBarResults = ({ data }) => {
           bg="white"
           zIndex="2"
           width="200px"
-          right="10px"
+          right="30px"
           top="50px"
           boxShadow="md"
           borderRadius="md"
@@ -35,12 +35,12 @@ const SearchBarResults = ({ data }) => {
         bg="white"
         zIndex="2"
         width="300px"
-        right="10px"
+        right={2}
         top="50px"
         boxShadow="md"
         borderRadius="md"
         overflowY={"scroll"}
-        maxH={"6cm"}
+        maxH={"10cm"}
       >
         {" "}
         {data &&

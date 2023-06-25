@@ -144,7 +144,7 @@ return   setTimeout(() => {
               </NavLink>
             )}
 
-            <NavLink
+          { !token && token !="" &&   <NavLink
               to={"/register"}
               style={({ isActive }) => {
                 return isActive ? activeLinkStyle : defaultLinkStyle;
@@ -156,6 +156,8 @@ return   setTimeout(() => {
                 <Text>Sign Up</Text>{" "}
               </MenuItem>
             </NavLink>
+
+          }
           </MenuList>
         </Menu>
 
@@ -168,18 +170,20 @@ return   setTimeout(() => {
         >
           <Text fontSize={"1.3rem"}>Board</Text>
         </NavLink>
-        <NavLink
-          to={"/register"}
-          style={({ isActive }) => {
-            return isActive ? activeLinkStyle : defaultLinkStyle;
-          }}
-          end
-        >
-          <Text display={{ base: "none", lg: "block" }} fontSize={"1.3rem"}>
-            Sign Up
-          </Text>
-        </NavLink>
+      {
+        !token && token == "" &&   <NavLink
+        to={"/register"}
+        style={({ isActive }) => {
+          return isActive ? activeLinkStyle : defaultLinkStyle;
+        }}
+        end
+      >
+        <Text display={{ base: "none", lg: "block" }} fontSize={"1.3rem"}>
+          Sign Up
+        </Text>
+      </NavLink>
 
+      }
         {/* ) : ( */}
 
         {token && token != "" ? (
@@ -218,6 +222,7 @@ return   setTimeout(() => {
           <Input
             type="search"
             minLength={3}
+            border='2px solid white'
             _placeholder={{ color: "white" }}
             onChange={handleSearch}
             placeholder="Search..."

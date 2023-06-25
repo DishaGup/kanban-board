@@ -11,11 +11,13 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon, List,
+  AccordionIcon,
+  List,
   ListItem,
   ListIcon,
   OrderedList,
-  UnorderedList,Tooltip
+  UnorderedList,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { forwardRef, useEffect, useState } from "react";
 import {
@@ -28,7 +30,11 @@ import {
 import AddSubtask from "./AddSubtask";
 import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTaskFromBoard, updateSubTaskStatus, updateTaskToDoing } from "../Redux/action";
+import {
+  deleteTaskFromBoard,
+  updateSubTaskStatus,
+  updateTaskToDoing,
+} from "../Redux/action";
 import { Droppable } from "react-beautiful-dnd";
 const SingleTaskCard = ({
   title,
@@ -42,24 +48,29 @@ const SingleTaskCard = ({
 
   const [donetasklength, setdoneTasklength] = useState(0);
   const dispatch = useDispatch();
-  const location=useLocation()
-  const { token,TaskData,userDetails,SingleTaskData,loading } = useSelector((store) => store.reducer);
+  const location = useLocation();
+  const { token, TaskData, userDetails, SingleTaskData, loading } = useSelector(
+    (store) => store.reducer
+  );
   const { onOpen, isOpen, onClose } = useDisclosure();
   const handleUpdateStatusOfSubtask = (subtaskId) => {
-
     const defaultBoardId = TaskData[0]?._id;
     const passId = boardId || defaultBoardId;
-    let obj = { token, boardId:passId, taskId: _id,email:userDetails[0].email,subtaskId };
-dispatch(updateSubTaskStatus(obj))
-
-
+    let obj = {
+      token,
+      boardId: passId,
+      taskId: _id,
+      email: userDetails[0].email,
+      subtaskId,
+    };
+    dispatch(updateSubTaskStatus(obj));
   };
 
   const handleTaskDelete = () => {
     const defaultBoardId = TaskData[0]?._id;
     const passId = boardId || defaultBoardId;
-    let email=userDetails[0].email
-    dispatch(deleteTaskFromBoard(_id, token,passId,email));
+    let email = userDetails[0].email;
+    dispatch(deleteTaskFromBoard(_id, token, passId, email));
   };
 
   const findDonesubtask = () => {
@@ -71,17 +82,31 @@ dispatch(updateSubTaskStatus(obj))
 
   useEffect(() => {
     findDonesubtask();
-  }, [loading]);
+  }, [updateSubTaskStatus]);
 
   const handleAddtoDoing = () => {
     const defaultBoardId = TaskData[0]?._id;
     const passId = boardId || defaultBoardId;
-    let obj = { token, boardId:passId, taskId: _id,email:userDetails[0].email };
+    let obj = {
+      token,
+      boardId: passId,
+      taskId: _id,
+      email: userDetails[0].email,
+    };
     dispatch(updateTaskToDoing(obj));
   };
 
   return (
-    <Box p={3} w={{ base:'280px',sm:'90%'}} position={"relative"} border="2px dashed green" borderRadius={'10px'} m={3} bg='white' cursor={'cursor'} >
+    <Box
+      p={3}
+      w={{ base: "280px", sm: "90%" }}
+      position={"relative"}
+      border="2px dashed green"
+      borderRadius={"10px"}
+      m={3}
+      bg="white"
+      cursor={"cursor"}
+    >
       {statuss == true && status !== "Done" && (
         <Button
           position={"absolute"}
@@ -94,7 +119,7 @@ dispatch(updateSubTaskStatus(obj))
           m="1"
           mb="8px"
           ml="5px"
-          cursor={'pointer'}
+          cursor={"pointer"}
         >
           {" "}
           <FcPositiveDynamic
@@ -115,7 +140,6 @@ dispatch(updateSubTaskStatus(obj))
         m="1"
         mb="8px"
         mr="5px"
-      
       >
         {" "}
         <FcFullTrash fontSize={"22px"} onClick={handleTaskDelete} />{" "}
@@ -140,42 +164,47 @@ dispatch(updateSubTaskStatus(obj))
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4} border="1px solid green" bg='green.100' >
-
-
-            <OrderedList spacing={3}>
-
-
-              {subtasks &&
-                subtasks.map((subtask, index) => (
-                  <>
-                    {" "}
-                    <ListItem key={index}>
-                    <HStack align="center">
+            <AccordionPanel pb={4} border="1px solid green" bg="green.100">
+              <OrderedList spacing={3}>
+                {subtasks &&
+                  subtasks.map((subtask, index) => (
+                    <>
                       {" "}
-                      <Text >{subtask.title}</Text>
-                      <Button bg='0 0' _hover={{bg:'0 0'}} ouline='0 0' onClick={()=>handleUpdateStatusOfSubtask(subtask._id)}>
-                        {subtask.isCompleted ? (
-                          <FcCheckmark boxsize={7} />
-                        ) : (
-                          <FcReading boxsize={7} />
-                        )}
-                      </Button>{" "}
-                    </HStack>
-  </ListItem>
-                 
-                  </>
-                ))}
-                
-                <Tooltip label="Add Subtask">
-  <div>
-    <Button fontSize="20px" bg="0 0" _hover={{ bg: '0 0' }} outline="0 0">
-      <FcPlus onClick={onOpen} />
-    </Button>
-  
-  </div>
-</Tooltip>
+                      <ListItem key={index}>
+                        <HStack align="center">
+                          {" "}
+                          <Text>{subtask.title}</Text>
+                          <Button
+                            bg="0 0"
+                            _hover={{ bg: "0 0" }}
+                            ouline="0 0"
+                            onClick={() =>
+                              handleUpdateStatusOfSubtask(subtask._id)
+                            }
+                          >
+                            {subtask.isCompleted ? (
+                              <FcCheckmark boxsize={7} />
+                            ) : (
+                              <FcReading boxsize={7} />
+                            )}
+                          </Button>{" "}
+                        </HStack>
+                      </ListItem>
+                    </>
+                  ))}
 
+                <Tooltip label="Add Subtask">
+                  <div>
+                    <Button
+                      fontSize="20px"
+                      bg="0 0"
+                      _hover={{ bg: "0 0" }}
+                      outline="0 0"
+                    >
+                      <FcPlus onClick={onOpen} />
+                    </Button>
+                  </div>
+                </Tooltip>
               </OrderedList>
               {isOpen && (
                 <AddSubtask
@@ -183,11 +212,9 @@ dispatch(updateSubTaskStatus(obj))
                   onClose={onClose}
                   onOpen={onOpen}
                   taskId={_id}
-                
                   boardId={boardId}
                 />
               )}
-
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

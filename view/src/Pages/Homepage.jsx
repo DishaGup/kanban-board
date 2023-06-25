@@ -55,16 +55,22 @@ const Homepage = () => {
   useEffect(() => {
    if(token!="") {
  dispatch(fetchAllBoards(token,userDetails[0].email))}
-  }, [TaskData,loading]);
+  }, [TaskData.length]);
 
   if(!token || token === ""){
     return <> token not found</>
   }
- return (
+
+   return (
     <React.Suspense fallback={<div>Loading...</div>}>
-      <Box h={{base:'max-content',md:'100vh'}}   style={{
+      <Box h='100vh'   style={{
           backgroundImage: "linear-gradient(to right,#E8F5E9 ,#F1F8E9, white)",
-        }}>   
+          backgroundColor: "#F1F8E9",
+opacity: "1",
+background: "radial-gradient(circle, transparent 20%, #F1F8E9 20%, #F1F8E9 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #F1F8E9 20%, #F1F8E9 80%, transparent 80%, transparent) 27.5px 27.5px, linear-gradient(#C5E1A5 2.2px, transparent 2.2px) 0 -1.1px, linear-gradient(90deg, #C5E1A5 2.2px, #F1F8E9 2.2px) -1.1px 0",
+backgroundSize: "55px 55px, 55px 55px, 27.5px 27.5px, 27.5px 27.5px"
+        }}
+        >   
       <Button
         onClick={onOpen}
         display={{ base: "block", lg: "none" }}
@@ -86,7 +92,6 @@ const Homepage = () => {
         templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "240px 1fr 1fr" }}
         gap={4}
         autoRows={'true'}
-        
         m="auto"
         w='98%'
         
@@ -94,12 +99,14 @@ const Homepage = () => {
         <GridItem
           display={{ base: "none", lg: "block" }}
           colSpan={1}
-          scrollBehavior="smooth"
-          overflowY="scroll"
-          mt="50px"
-          maxHeight="700px"
+           overflowY="scroll"
+          mt="10px"
+          minHeight="90vh"
+          style={{
+            backgroundImage: "linear-gradient(to right,#E8F5E9 ,#F1F8E9, white)",
+                 }} 
         >
-          {TaskData && TaskData.length > 0 && <BoardSideBar />}
+         <BoardSideBar />
         </GridItem>
         <GridItem colSpan={2} mt={{ base: "100px", md: "110px",xl:'90px' }}>
           {TaskData && TaskData.length > 0 && <TaskRight defaults={TaskData[0]._id} />}

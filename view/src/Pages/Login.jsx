@@ -32,8 +32,8 @@ export const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
-  const { error,token } = useSelector((store) => store.reducer);
-console.log(error)
+  const { error, token } = useSelector((store) => store.reducer);
+  console.log(error);
   const dispatch = useDispatch();
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -61,7 +61,6 @@ console.log(error)
           setTimeout(() => {
             navigate("/");
           }, 1000);
-         
         } else {
           toast({
             title: "Wrong Credentials",
@@ -82,8 +81,8 @@ console.log(error)
           duration: 2000,
           isClosable: true,
         });
-     });
-   // console.log(formData)
+      });
+    // console.log(formData)
     setFormData(initial);
   };
   return (
@@ -97,23 +96,28 @@ console.log(error)
         padding={"20px"}
         border={"2px solid #76FF03"}
       >
-        <Center mb='10px'>
-          <Text textDecoration={'underline'} as={"h2"} fontWeight={"500"} fontSize={"1.5rem"}>
-            Login 
+        <Center mb="10px">
+          <Text
+            textDecoration={"underline"}
+            as={"h2"}
+            fontWeight={"500"}
+            fontSize={"1.5rem"}
+          >
+            Login
           </Text>
         </Center>
 
         <form onSubmit={handleSubmit}>
           <Flex
             flexDirection={"column"}
-            gap={{base:'10px',lg:"20px"}}
+            gap={{ base: "10px", lg: "20px" }}
             padding={{ sm: "30px", md: "50px", lg: "40px" }}
           >
             <FormControl isRequired>
               <SimpleGrid
                 margin={"auto"}
-               gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
-                 alignItems={"center"}
+                gridTemplateColumns={{ base: "1fr", sm: "repeat(2,1fr)" }}
+                alignItems={"center"}
               >
                 <FormLabel>
                   <Text as={"span"}>Email</Text>
@@ -131,7 +135,7 @@ console.log(error)
 
             <FormControl isRequired>
               <SimpleGrid
-                gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
+                gridTemplateColumns={{ base: "1fr", sm: "repeat(2,1fr)" }}
                 alignItems={"center"}
               >
                 <FormLabel>

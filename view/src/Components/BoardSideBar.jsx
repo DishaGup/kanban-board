@@ -13,7 +13,7 @@ const BoardSideBar = () => {
 console.log(TaskData)
 const addBoard=()=>{
 
- let data={name:`Board ${TaskData.length}`,email:userDetails[0].email,email_task:userDetails[0].email}
+ let data={name:`Board ${TaskData.length+1}`,email:userDetails[0].email,email_task:userDetails[0].email}
    dispatch(addBoardData(data,token))
 }
 
@@ -21,7 +21,9 @@ const addBoard=()=>{
 
   return (
     <>
-      <Box>
+      <Box   style={{
+          backgroundImage: "linear-gradient(to right,#E8F5E9 ,#F1F8E9, white)",
+               }}   >
         <Text fontWeight='600' fontSize='20px' my="10px">Total Boards {TaskData.length}</Text>
 
         <Box>
