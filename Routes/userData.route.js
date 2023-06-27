@@ -20,6 +20,7 @@ userDataRouter.get("/", filterBoardsByEmail,(req, res) => {
   res.status(200).json({ boards });
 });
 
+
 userDataRouter.get("/board/:id", async (req, res) => {
   try {
     const boardId = req.params.id;
@@ -55,6 +56,31 @@ userDataRouter.post("/addboard", filterBoardsByEmail,async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+
+userDataRouter.put("/update/board/:id", async (req, res) => {
+  try {
+    const boardId = req.params.id;
+    const updatedData = req.body; // Assuming the updated data is sent in the request body
+
+    const board = await BoardModel.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ error: "Board not found" });
+    }
+
+    // Update the board data
+    board.title = updatedData.title; // Assuming "title" is one of the fields to be updated
+    board.tasks = updatedData.tasks; // Assuming "tasks" is the array of tasks to be updated
+
+    await board.save();
+
+    res.status(200).json({ message: "Board updated successfully", board });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+
 
 userDataRouter.post("/addtask", async (req, res) => {
   try {

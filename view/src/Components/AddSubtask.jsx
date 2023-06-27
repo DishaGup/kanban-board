@@ -4,85 +4,82 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  ModalCloseButton,
   Input,
   Button,
-  useToast,HStack
+  useToast,
+  HStack,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { AddSubtaskToTask } from "../Redux/action";
-const AddSubtask = ({ isOpen, onOpen, onClose, taskId, boardId }) => {
+
+const AddSubtask = ({ isOpen, onClose, taskId, boardId }) => {
   const [formError, setFormError] = useState(false);
-
   const [title, setTitle] = useState("");
-
   const toast = useToast();
-  const { error, token, TaskData,userDetails } = useSelector((store) => store.reducer);
-
+  const { token, TaskData, userDetails } = useSelector((store) => store.reducer);
   const dispatch = useDispatch();
 
   const handleAddSubtask = (e) => {
     e.preventDefault();
-    e.preventDefault();
+    
     if (title.trim() === "") {
       setFormError(true);
       return;
     }
 
-    let passId = boardId || TaskData[0]?._id;
+    const passId = boardId || TaskData[0]?._id;
 
-    let data = { boardId: passId, taskId, title, token, isCompleted: false,email:userDetails[0].email };
+    const data = {
+      boardId: passId,
+      taskId,
+      title,
+      token,
+      isCompleted: false,
+      email: userDetails[0].email,
+    };
 
     dispatch(AddSubtaskToTask(data));
     setTitle("");
+    onClose();
     setFormError(false);
   };
 
   return (
-    <div>
-      <Modal
-        size={["xs", "sm", "md"]}
-        closeOnOverlayClick={false}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <form onSubmit={handleAddSubtask}>
-              <FormControl isRequired>
-                <FormLabel>Task Name: </FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Type your task"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
+    <Modal
+      size={["xs", "sm", "md"]}
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Add Subtask</ModalHeader>
+        <ModalBody pb={6}>
+          <form onSubmit={handleAddSubtask}>
+            <FormControl isRequired>
+              <FormLabel>Task Name: </FormLabel>
+              <Input
+                type="text"
+                placeholder="Type your task"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </FormControl>
+            {formError && <p>Please fill out all the required fields.</p>}
 
-                <FormHelperText>We'll never share your data</FormHelperText>
-              </FormControl>
-              {formError && <p>Please fill out all the required fields.</p>}
-
-              <HStack w="80%" m="auto" justify="space-between" mt="50px">
-                {" "}
-                <Button type="submit" colorScheme="green" mr={3}>
-                  Add SubTask
-                </Button>
-                <Button onClick={onClose}>Cancel</Button>
-              </HStack>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </div>
+            <HStack w="80%" m="auto" justify="space-between" mt="50px">
+              <Button type="submit" colorScheme="green" mr={3}>
+                Add SubTask
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </HStack>
+          </form>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };
 

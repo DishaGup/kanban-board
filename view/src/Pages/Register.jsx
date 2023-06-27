@@ -13,47 +13,40 @@ import {
   Text,
   Center,
   FormHelperText,
-  FormErrorMessage,
   useToast,
   Stack,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUserRequest } from "../Redux/action";
+
 const initialState = {
   password: "",
   email: "",
   confirmpassword: "",
 };
+
 export const Register = () => {
-  const [formData, setData] = useState(initialState);
-  const [showpass1, setShowpass1] = useState(false);
+  const [formData, setFormData] = useState(initialState);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
   const dispatch = useDispatch();
+  const { error } = useSelector((store) => store.reducer);
 
- const { token, TaskData, loading, error, SingleTaskData } = useSelector(
-    (store) => store.reducer
-  );
-  //making an object from input values
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    setData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
-
-  //passing formData to Database
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmpassword) {
-      return toast({
+      toast({
         title: "Error in Creating Your Account",
         description: "Password doesn't match",
         position: "top",
@@ -62,15 +55,15 @@ export const Register = () => {
         duration: 4000,
         isClosable: true,
       });
+      return;
     }
 
     dispatch(registerUserRequest(formData))
       .then((res) => {
-       
         toast({
-          title: `${res.data.message}`,
+          title: res.data.message,
           position: "top",
-          description: "We've created Account for you.",
+          description: "We've created an account for you.",
           status: "success",
           variant: "top-accent",
           duration: 3000,
@@ -78,8 +71,7 @@ export const Register = () => {
         });
         navigate("/login");
       })
-      .catch((err) =>{
-    
+      .catch((err) => {
         toast({
           title: "Error in Creating Your Account",
           position: "top",
@@ -87,54 +79,49 @@ export const Register = () => {
           variant: "top-accent",
           duration: 3000,
           isClosable: true,
-        })}
-      );
-   
+        });
+      });
 
-    setData(initialState);
+    setFormData(initialState);
   };
 
   return (
-    <Box padding={"20px"}>
+    <Box padding="20px">
       <Box
-  
-        margin={"auto"}
+        margin="auto"
         mt={{ sm: "5%", md: "5%", lg: "3%" }}
         width={{ sm: "90vw", md: "80vw", lg: "45vw" }}
-        borderRadius={"5px"}
-        boxShadow={"md"}
-        backgroundColor={"white"}
-        border={"2px solid #76FF03"}
-        p='15px'
+        borderRadius="5px"
+        boxShadow="md"
+        backgroundColor="white"
+        border="2px solid #76FF03"
+        p="15px"
       >
-        <Center mt={"20px"}>
-          <Text as={"h2"} fontWeight={"500"} fontSize={"1.5rem"}>
+        <Center mt="20px">
+          <Text as="h2" fontWeight="500" fontSize="1.5rem">
             Create New Account
           </Text>
         </Center>
 
         <form onSubmit={handleSubmit}>
           <Flex
-            flexDirection={"column"}
-            gap={{base:'10px',lg:"20px"}}
+            flexDirection="column"
+            gap={{ base: "10px", lg: "20px" }}
             padding={{ sm: "50px", md: "50px", lg: "40px" }}
           >
-     
-
             <FormControl isRequired>
               <SimpleGrid
-                 gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
-                alignItems={"center"}
+                gridTemplateColumns={{ base: "1fr", sm: "repeat(2,1fr)" }}
+                alignItems="center"
               >
                 <FormLabel>
-                  <Text as={"span"}>Email</Text>{" "}
+                  <Text as="span">Email</Text>
                 </FormLabel>
-
                 <Input
                   placeholder="Email"
                   name="email"
-                  border={"1px dotted #8BC34A"}
-                  type={"email"}
+                  border="1px dotted #8BC34A"
+                  type="email"
                   value={formData.email}
                   onChange={handleChange}
                 />
@@ -144,26 +131,25 @@ export const Register = () => {
               </FormHelperText>
             </FormControl>
 
-       
             <FormControl isRequired>
               <SimpleGrid
-               gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
-                alignItems={"center"}
+                gridTemplateColumns={{ base: "1fr", sm: "repeat(2,1fr)" }}
+                alignItems="center"
               >
                 <FormLabel>
-                  <Text as={"span"}>Password</Text>
+                  <Text as="span">Password</Text>
                 </FormLabel>
                 <HStack>
                   <Input
-                    border={"1px dotted #8BC34A"}
+                    border="1px dotted #8BC34A"
                     placeholder="Password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    type={showpass1 ? "text" : "password"}
-                  ></Input>
-                  <Button onClick={() => setShowpass1((prev) => !prev)}>
-                    {showpass1 ? <AiFillEye /> : <AiFillEyeInvisible />}
+                    type={showPassword ? "text" : "password"}
+                  />
+                  <Button onClick={() => setShowPassword((prev) => !prev)}>
+                    {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
                   </Button>
                 </HStack>
               </SimpleGrid>
@@ -171,53 +157,45 @@ export const Register = () => {
 
             <FormControl isRequired>
               <SimpleGrid
-                  gridTemplateColumns={{base:'1fr',sm:"repeat(2,1fr)"}}
-                alignItems={"center"}
+                gridTemplateColumns={{ base: "1fr", sm: "repeat(2,1fr)" }}
+                alignItems="center"
               >
                 <FormLabel>
-                  <Text as={"span"}>Confirm Password</Text>
+                  <Text as="span">Confirm Password</Text>
                 </FormLabel>
                 <HStack>
                   <Input
-                    border={"1px dotted gray"}
+                    border="1px dotted gray"
                     name="confirmpassword"
                     placeholder="Confirm Password"
                     value={formData.confirmpassword}
                     onChange={handleChange}
-                    type="text"
+                    type="password"
                   />
-
                   <Button>
-                    {formData.password == formData.confirmpassword ? (
-                      <FcCheckmark boxsize={6} />
+                    {formData.password === formData.confirmpassword ? (
+                      <FcCheckmark boxSize={6} />
                     ) : (
-                      <FcCancel boxsize={6} />
+                      <FcCancel boxSize={6} />
                     )}
                   </Button>
                 </HStack>
               </SimpleGrid>
-
               <FormHelperText>
-                {formData.password == formData.confirmpassword
-                  ? "Please make sure password matches.."
-                  : "*Password is not matching"}
+                {formData.password === formData.confirmpassword
+                  ? "Please make sure the password matches."
+                  : "*Password does not match."}
               </FormHelperText>
             </FormControl>
 
             <FormControl>
-              <Stack
-                width={"50%"}
-                margin={"auto"}
-                spacing={10}
-                mt={"30px"}
-                pt={2}
-              >
+              <Stack width="50%" margin="auto" spacing={10} mt="30px" pt={2}>
                 <Button
-                  type={"submit"}
+                  type="submit"
                   variant="outline"
                   size="lg"
-                  border={"1px solid #7CB342"}
-                  color={"#76FF03"}
+                  border="1px solid #7CB342"
+                  color="#76FF03"
                   borderRadius="5px"
                   _hover={{
                     bg: "#7CB342",
@@ -231,8 +209,8 @@ export const Register = () => {
             <Box>
               <Text>
                 Already have an account?{" "}
-                <Link style={{ textDecoration: "underline" }} to={"/login"}>
-                  Login{" "}
+                <Link to="/login" style={{ textDecoration: "underline" }}>
+                  Login
                 </Link>
               </Text>
             </Box>

@@ -46,19 +46,17 @@ export const Navbar = () => {
   };
 
   const debouncedSearch = debounce((query) => {
-
-if(!token || token =="") {
-return   setTimeout(() => {
-  toast({
-    title: "Please Login",
-    description:"token not found",
-    status: "info",
-    duration: 3000,
-    isClosable: true,
-  });
-}, 2000);
-}
-
+    if (!token || token == "") {
+      return setTimeout(() => {
+        toast({
+          title: "Please Login",
+          description: "token not found",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+        });
+      }, 2000);
+    }
 
     if (query === "" || query.length < 2) {
       setTimeout(() => {
@@ -144,20 +142,20 @@ return   setTimeout(() => {
               </NavLink>
             )}
 
-          { !token && token !="" &&   <NavLink
-              to={"/register"}
-              style={({ isActive }) => {
-                return isActive ? activeLinkStyle : defaultLinkStyle;
-              }}
-              end
-            >
-              {" "}
-              <MenuItem icon={<FcLock />}>
-                <Text>Sign Up</Text>{" "}
-              </MenuItem>
-            </NavLink>
-
-          }
+            {!token && token != "" && (
+              <NavLink
+                to={"/register"}
+                style={({ isActive }) => {
+                  return isActive ? activeLinkStyle : defaultLinkStyle;
+                }}
+                end
+              >
+                {" "}
+                <MenuItem icon={<FcLock />}>
+                  <Text>Sign Up</Text>{" "}
+                </MenuItem>
+              </NavLink>
+            )}
           </MenuList>
         </Menu>
 
@@ -170,20 +168,19 @@ return   setTimeout(() => {
         >
           <Text fontSize={"1.3rem"}>Board</Text>
         </NavLink>
-      {
-        !token && token == "" &&   <NavLink
-        to={"/register"}
-        style={({ isActive }) => {
-          return isActive ? activeLinkStyle : defaultLinkStyle;
-        }}
-        end
-      >
-        <Text display={{ base: "none", lg: "block" }} fontSize={"1.3rem"}>
-          Sign Up
-        </Text>
-      </NavLink>
-
-      }
+        {!token && token == "" && (
+          <NavLink
+            to={"/register"}
+            style={({ isActive }) => {
+              return isActive ? activeLinkStyle : defaultLinkStyle;
+            }}
+            end
+          >
+            <Text display={{ base: "none", lg: "block" }} fontSize={"1.3rem"}>
+              Sign Up
+            </Text>
+          </NavLink>
+        )}
         {/* ) : ( */}
 
         {token && token != "" ? (
@@ -222,7 +219,7 @@ return   setTimeout(() => {
           <Input
             type="search"
             minLength={3}
-            border='2px solid white'
+            border="2px solid white"
             _placeholder={{ color: "white" }}
             onChange={handleSearch}
             placeholder="Search..."

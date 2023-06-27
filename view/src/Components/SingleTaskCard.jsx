@@ -5,6 +5,7 @@ import {
   Button,
   useDisclosure,
   HStack,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   Accordion,
@@ -16,10 +17,8 @@ import {
   ListItem,
   ListIcon,
   OrderedList,
-  UnorderedList,
-  Tooltip,
 } from "@chakra-ui/react";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FcCheckmark,
   FcReading,
@@ -36,6 +35,7 @@ import {
   updateTaskToDoing,
 } from "../Redux/action";
 import { Droppable } from "react-beautiful-dnd";
+
 const SingleTaskCard = ({
   title,
   description,
@@ -46,13 +46,14 @@ const SingleTaskCard = ({
 }) => {
   const { boardId } = useParams();
 
-  const [donetasklength, setdoneTasklength] = useState(0);
+  const [doneTaskLength, setDoneTaskLength] = useState(0);
   const dispatch = useDispatch();
   const location = useLocation();
-  const { token, TaskData, userDetails, SingleTaskData, loading } = useSelector(
+  const { token, TaskData, userDetails, SingleTaskData, loading, updateSubTaskStatus } = useSelector(
     (store) => store.reducer
   );
   const { onOpen, isOpen, onClose } = useDisclosure();
+
   const handleUpdateStatusOfSubtask = (subtaskId) => {
     const defaultBoardId = TaskData[0]?._id;
     const passId = boardId || defaultBoardId;
@@ -73,18 +74,16 @@ const SingleTaskCard = ({
     dispatch(deleteTaskFromBoard(_id, token, passId, email));
   };
 
-  const findDonesubtask = () => {
-    let donesubtaskfilter = subtasks.filter(
-      (el, index) => el.isCompleted == true
-    );
-    setdoneTasklength(donesubtaskfilter.length);
+  const findDoneSubtask = () => {
+    let doneSubtaskFilter = subtasks.filter((el, index) => el.isCompleted === true);
+    setDoneTaskLength(doneSubtaskFilter.length);
   };
 
   useEffect(() => {
-    findDonesubtask();
+    findDoneSubtask();
   }, [updateSubTaskStatus]);
 
-  const handleAddtoDoing = () => {
+  const handleAddToDoing = () => {
     const defaultBoardId = TaskData[0]?._id;
     const passId = boardId || defaultBoardId;
     let obj = {
@@ -100,55 +99,50 @@ const SingleTaskCard = ({
     <Box
       p={3}
       w={{ base: "280px", sm: "90%" }}
-      position={"relative"}
+      position="relative"
       border="2px dashed green"
-      borderRadius={"10px"}
+      borderRadius="10px"
       m={3}
       bg="white"
-      cursor={"cursor"}
+      cursor="cursor"
     >
-      {statuss == true && status !== "Done" && (
+      {statuss && status !== "Done" && (
         <Button
-          position={"absolute"}
+          position="absolute"
           _hover={{ bg: "0 0" }}
           left={0}
           top={0}
           zIndex={1}
           bg="0 0"
-          outline={"0 0"}
+          outline="0 0"
           m="1"
           mb="8px"
           ml="5px"
-          cursor={"pointer"}
+          cursor="pointer"
         >
-          {" "}
-          <FcPositiveDynamic
-            fontSize={"22px"}
-            onClick={handleAddtoDoing}
-          />{" "}
+          <FcPositiveDynamic fontSize="22px" onClick={handleAddToDoing} />
         </Button>
       )}
 
       <Button
-        position={"absolute"}
+        position="absolute"
         _hover={{ bg: "0 0" }}
         right={0}
         top={0}
         zIndex={1}
         bg="0 0"
-        outline={"0 0"}
+        outline="0 0"
         m="1"
         mb="8px"
         mr="5px"
       >
-        {" "}
-        <FcFullTrash fontSize={"22px"} onClick={handleTaskDelete} />{" "}
+        <FcFullTrash fontSize="22px" onClick={handleTaskDelete} />
       </Button>
       <VStack mt="18px">
-        <Text fontSize="16px" fontWeight={"600"}>
+        <Text fontSize="16px" fontWeight="600">
           {title}
         </Text>
-        <Text fontSize="13px" fontWeight={"400"}>
+        <Text fontSize="13px" fontWeight="400">
           {description}
         </Text>
 
@@ -158,7 +152,7 @@ const SingleTaskCard = ({
               <AccordionButton>
                 <Box as="span" flex="1" textAlign="center">
                   <Text>
-                    {donetasklength} of {subtasks.length} subtask done{" "}
+                    {doneTaskLength} of {subtasks.length} subtask done{" "}
                   </Text>
                 </Box>
                 <AccordionIcon />
@@ -166,44 +160,34 @@ const SingleTaskCard = ({
             </h2>
             <AccordionPanel pb={4} border="1px solid green" bg="green.100">
               <OrderedList spacing={3}>
-                {subtasks &&
-                  subtasks.map((subtask, index) => (
-                    <>
-                      {" "}
-                      <ListItem key={index}>
-                        <HStack align="center">
-                          {" "}
-                          <Text>{subtask.title}</Text>
-                          <Button
-                            bg="0 0"
-                            _hover={{ bg: "0 0" }}
-                            ouline="0 0"
-                            onClick={() =>
-                              handleUpdateStatusOfSubtask(subtask._id)
-                            }
-                          >
-                            {subtask.isCompleted ? (
-                              <FcCheckmark boxsize={7} />
-                            ) : (
-                              <FcReading boxsize={7} />
-                            )}
-                          </Button>{" "}
-                        </HStack>
-                      </ListItem>
-                    </>
-                  ))}
-
+                {subtasks.map((subtask) => (
+                  <ListItem key={subtask._id}>
+                    <HStack align="center">
+                      <Text>{subtask.title}</Text>
+                      <Button
+                        bg="0 0"
+                        _hover={{ bg: "0 0" }}
+                        outline="0 0"
+                        onClick={() => handleUpdateStatusOfSubtask(subtask._id)}
+                      >
+                        {subtask.isCompleted ? (
+                          <FcCheckmark boxSize={7} />
+                        ) : (
+                          <FcReading boxSize={7} />
+                        )}
+                      </Button>
+                    </HStack>
+                  </ListItem>
+                ))}
                 <Tooltip label="Add Subtask">
-                  <div>
-                    <Button
-                      fontSize="20px"
-                      bg="0 0"
-                      _hover={{ bg: "0 0" }}
-                      outline="0 0"
-                    >
-                      <FcPlus onClick={onOpen} />
-                    </Button>
-                  </div>
+                  <Button
+                    fontSize="20px"
+                    bg="0 0"
+                    _hover={{ bg: "0 0" }}
+                    outline="0 0"
+                  >
+                    <FcPlus onClick={onOpen} />
+                  </Button>
                 </Tooltip>
               </OrderedList>
               {isOpen && (

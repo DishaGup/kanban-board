@@ -1,65 +1,40 @@
 import React from "react";
-import { Box, List, ListItem, ListIcon, OrderedList } from "@chakra-ui/react";
+import { Box, List, ListItem, ListIcon } from "@chakra-ui/react";
 import { FcInfo } from "react-icons/fc";
 
 const SearchBarResults = ({ data }) => {
-  //console.log(data)
-  if (!data) {
-    return (
-      <>
-        <Box
-          position="absolute"
-          bg="white"
-          zIndex="2"
-          width="200px"
-          right="30px"
-          top="50px"
-          boxShadow="md"
-          borderRadius="md"
-        >
-          <List spacing={3} p={4}>
-            <ListItem fontWeight="bold">
-              <ListIcon as={FcInfo} color="blue.500" />
-              No Results Found
-            </ListItem>
-          </List>
-        </Box>
-      </>
-    );
+  if (!data || data.length === 0) {
+    return null;
   }
 
   return (
-    <>
-      <Box
-        position="absolute"
-        bg="white"
-        zIndex="2"
-        width="300px"
-        right={2}
-        top="50px"
-        boxShadow="md"
-        borderRadius="md"
-        overflowY={"scroll"}
-        maxH={"10cm"}
-      >
-        {" "}
-        {data &&
-          data.length >= 1 &&
-          data.map((ele, index) => (
-            <List spacing={3} p={4}>
-              <ListItem fontWeight="bold">{ele.board}</ListItem>
-              {ele.tasks.length >= 1 &&
-                ele.tasks.map((el, index) => (
-                  <List>
-                    <ListItem key={index} pl={4}>
-                      {el}
-                    </ListItem>{" "}
-                  </List>
+    <Box
+      position="absolute"
+      bg="white"
+      zIndex="2"
+      width="300px"
+      right={2}
+      top="50px"
+      boxShadow="md"
+      borderRadius="md"
+      overflowY="scroll"
+      maxH="10cm"
+    >
+      <List spacing={3} p={4}>
+        {data.map((result, index) => (
+          <ListItem key={index} fontWeight="bold">
+            {result.board}
+            {result.tasks.length > 0 && (
+              <List ml={4}>
+                {result.tasks.map((task, taskIndex) => (
+                  <ListItem key={taskIndex}>{task}</ListItem>
                 ))}
-            </List>
-          ))}
-      </Box>
-    </>
+              </List>
+            )}
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
 };
 

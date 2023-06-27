@@ -118,7 +118,7 @@ export const addBoardData = (data, token) => async (dispatch) => {
     dispatch({ type: USER_REQUEST_FAILURE, payload: error });
   }
 };
-export const delteBoardData = (id, token, email) => (dispatch) => {
+export const deleteBoardData = (id, token, email) => (dispatch) => {
   dispatch({ type: USER_REQUEST_PENDING }); // Dispatch a user request pending action
   //console.log(email,'..delete')
   // Make a POST request to the add bookmark endpoint
@@ -133,6 +133,27 @@ export const delteBoardData = (id, token, email) => (dispatch) => {
     })
     .then((res) => dispatch(fetchAllBoards(token, email)))
     .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
+};
+
+export const updateBoardData = (boardId, newData, token, email) => async (dispatch) => {
+  dispatch({ type: USER_REQUEST_PENDING });
+
+  try {
+    await axios.put(`${url}/task/update/board/${boardId}`, newData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        email: email,
+      },
+    });
+
+    await dispatch(fetchSingleBoardsData(token, boardId, email));
+
+    dispatch({ type: "LOADING_FALSE" });
+  } catch (error) {
+    dispatch({ type: USER_REQUEST_FAILURE, payload: error });
+  }
 };
 
 export const deleteTaskFromBoard =
