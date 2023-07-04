@@ -135,26 +135,27 @@ export const deleteBoardData = (id, token, email) => (dispatch) => {
     .catch((err) => dispatch({ type: USER_REQUEST_FAILURE, payload: err }));
 };
 
-export const updateBoardData = (boardId, newData, token, email) => async (dispatch) => {
-  dispatch({ type: USER_REQUEST_PENDING });
+export const updateBoardData =
+  (boardId, newData, token, email) => async (dispatch) => {
+    dispatch({ type: USER_REQUEST_PENDING });
 
-  try {
-    await axios.put(`${url}/task/update/board/${boardId}`, newData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        email: email,
-      },
-    });
+    try {
+      await axios.put(`${url}/task/update/board/${boardId}`, newData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          email: email,
+        },
+      });
 
-    await dispatch(fetchSingleBoardsData(token, boardId, email));
+      await dispatch(fetchSingleBoardsData(token, boardId, email));
 
-    dispatch({ type: "LOADING_FALSE" });
-  } catch (error) {
-    dispatch({ type: USER_REQUEST_FAILURE, payload: error });
-  }
-};
+      dispatch({ type: "LOADING_FALSE" });
+    } catch (error) {
+      dispatch({ type: USER_REQUEST_FAILURE, payload: error });
+    }
+  };
 
 export const deleteTaskFromBoard =
   (id, token, boardId, email) => (dispatch) => {

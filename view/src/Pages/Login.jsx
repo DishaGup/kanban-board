@@ -141,13 +141,7 @@ export const Login = () => {
             </FormControl>
 
             <FormControl>
-              <Stack
-                width="50%"
-                margin="auto"
-                spacing={10}
-                mt="30px"
-                pt={2}
-              >
+              <Stack width="50%" margin="auto" spacing={10} mt="30px" pt={2}>
                 <Button
                   type="submit"
                   variant="outline"

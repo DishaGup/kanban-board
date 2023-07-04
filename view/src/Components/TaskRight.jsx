@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchSingleBoardsData } from "../Redux/action";
-import { Grid, GridItem, Heading, Spinner, Button, useDisclosure } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  Heading,
+  Spinner,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import SingleTaskCard from "./SingleTaskCard";
 import AddTasks from "./AddTasks";
 
@@ -16,11 +23,14 @@ const TaskRight = ({ defaults }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token, TaskData, loading, error, SingleTaskData, userDetails } = useSelector(
-    (store) => store.reducer
-  );
+  const { token, TaskData, loading, error, SingleTaskData, userDetails } =
+    useSelector((store) => store.reducer);
   const defaultBoardId = TaskData[0]?._id;
   useEffect(() => {
+    if (!token || token == "") {
+      return;
+    }
+
     const passId = boardId || defaultBoardId;
     dispatch(fetchSingleBoardsData(token, passId, userDetails[0].email));
   }, [boardId, defaultBoardId, token, TaskData.length]);
@@ -66,7 +76,11 @@ const TaskRight = ({ defaults }) => {
 
       <Grid
         autoFlow
-        templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3,1fr)" }}
+        templateColumns={{
+          base: "1fr",
+          sm: "repeat(2, 1fr)",
+          md: "repeat(3,1fr)",
+        }}
         autoRows
         m="auto"
         w="95%"

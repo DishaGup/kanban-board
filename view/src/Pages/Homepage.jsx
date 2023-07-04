@@ -1,5 +1,12 @@
-import React,{ useState, useEffect } from "react";
-import { Box, Button, Grid, GridItem, useDisclosure, useToast } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllBoards } from "../Redux/action";
@@ -11,45 +18,36 @@ const Homepage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const toast=useToast()
+  const toast = useToast();
   const { token, TaskData, userDetails } = useSelector(
     (store) => store.reducer
   );
 
   useEffect(() => {
-    if (!token || token=="") {
-      <>Token not found... Please Login  </>;
-    setTimeout(()=>{
-      toast({
-        title: "Please Login",
-        description: "token not found",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-      });
-      navigate("/login")
-     
-    
-    },1000)
-    return 
-    
-     
+    if (!token || token == "") {
+      <>Token not found... Please Login </>;
+      setTimeout(() => {
+        toast({
+          title: "Please Login",
+          description: "token not found",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+        });
+        navigate("/login");
+      }, 1000);
+      return;
     }
-   
-   
 
-    if (token!="" && userDetails.length>=1) {
+    if (token != "" && userDetails.length >= 1) {
       dispatch(fetchAllBoards(token, userDetails[0].email));
     }
   }, [token]);
 
- 
-
-
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <Box
-        h={{base:'100vh',lg:"100%"}}
+        h={{ base: "100vh", lg: "100%" }}
         style={{
           backgroundColor: "#F1F8E9",
           opacity: "1",

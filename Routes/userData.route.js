@@ -12,14 +12,10 @@ const {
   filterBoardsByEmail,
 } = require("../Controllers/filterBoardByEmail.middleware");
 
-
-
-
-userDataRouter.get("/", filterBoardsByEmail,(req, res) => {
+userDataRouter.get("/", filterBoardsByEmail, (req, res) => {
   const boards = req.filteredBoards;
   res.status(200).json({ boards });
 });
-
 
 userDataRouter.get("/board/:id", async (req, res) => {
   try {
@@ -32,7 +28,7 @@ userDataRouter.get("/board/:id", async (req, res) => {
         model: "SubTaskModel",
       },
     });
-   // console.log(board);
+    // console.log(board);
     if (!board) {
       return res.status(404).json({ error: "Board not found" });
     }
@@ -43,7 +39,7 @@ userDataRouter.get("/board/:id", async (req, res) => {
   }
 });
 
-userDataRouter.post("/addboard", filterBoardsByEmail,async (req, res) => {
+userDataRouter.post("/addboard", filterBoardsByEmail, async (req, res) => {
   //console.log(req.body,'..req.body')
   try {
     const board = new BoardModel({
@@ -56,7 +52,6 @@ userDataRouter.post("/addboard", filterBoardsByEmail,async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 userDataRouter.put("/update/board/:id", async (req, res) => {
   try {
@@ -79,8 +74,6 @@ userDataRouter.put("/update/board/:id", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
-
 
 userDataRouter.post("/addtask", async (req, res) => {
   try {
@@ -225,9 +218,5 @@ userDataRouter.patch("/update_subtask_completed/:id", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
-
-
-
 
 module.exports = { userDataRouter };
