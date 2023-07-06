@@ -659,15 +659,22 @@ The project follows a specific folder structure:
 
 ## Registeration Page
 
-![Screenshot (266)](https://github.com/DishaGup/kanban-board/assets/115460391/7b0f7857-d647-4621-9153-0e761fbb5fbe)
+![Screenshot (266)](https://github.com/DishaGup/kanban-board/assets/115460391/14d1b59f-5ca1-4e3f-8009-0f7f6db9fb49)
+
 
 ---
 
+
 ## Homepage
 
-![Screenshot (262)](https://github.com/DishaGup/kanban-board/assets/115460391/2321b93c-5ff2-4ef0-85af-4dd866586767)
 
-![Screenshot (264)](https://github.com/DishaGup/kanban-board/assets/115460391/a3e7a5c0-8a82-425d-a282-49aef5a700e6)
+![Screenshot (262)](https://github.com/DishaGup/kanban-board/assets/115460391/57c4f472-5a16-458b-a8bc-74952f713620)
+
+
+![Screenshot (264)](https://github.com/DishaGup/kanban-board/assets/115460391/1a14455a-38d2-4e79-ae7d-7df190df6d6b)
+
+
+
 
 
 ---
